@@ -13,37 +13,35 @@ realmName="$8"              # All uppercase domain, e.g. MYCOMPANY.COM
 netbiosName="$9"            # Pre-Win2K domain name
 
 # Log request parameters
-echo "Join_domain was here!" >/var/log/aezlog
-echo " Full VM Name: $fullVmName" >>/var/log/aezlog
-echo " Domain to join: $domainToJoin" >>/var/log/aezlog
-echo " DNS Discovery domain: $dnsDiscoveryDomain" >>/var/log/aezlog
-echo " OU Path: $ouPath" >>/var/log/aezlog
-echo " Domain Username: $domainUsername" >>/var/log/aezlog
-echo " DNS IP Address: $dnsIpAddress" >>/var/log/aezlog
-echo " Netbios Name: $netbiosName" >>/var/log/aezlog
-echo " Realmname: $realmName" >>/var/log/aezlog
+echo "Join_domain was here!" >/var/log/jdlog
+echo " Full VM Name: $fullVmName" >>/var/log/jdlog
+echo " Domain to join: $domainToJoin" >>/var/log/jdlog
+echo " DNS Discovery domain: $dnsDiscoveryDomain" >>/var/log/jdlog
+echo " OU Path: $ouPath" >>/var/log/jdlog
+echo " Domain Username: $domainUsername" >>/var/log/jdlog
+echo " Netbios Name: $netbiosName" >>/var/log/jdlog
+echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
 apt -y install realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit samba winbind ntp ntpdate
-echo "Software install done" >>/var/log/aezlog
+echo "Software install done" >>/var/log/jdlog
 
 # Configure NTP
-systemctl stop ntp  >>/var/log/aezlog
+systemctl stop ntp  
 echo "pool $domainToJoin " >/etc/ntp.conf
-systemctl start ntp >>/var/log/aezlog
-ntpdate -u a-e.no && hwclock -w >>/var/log/aezlog
-echo "Europe/Oslo" | tee /etc/timezone
-dpkg-reconfigure --frontend noninteractive tzdata
-echo "NTP and timezone updated, local time: $(date)" >>/var/log/aezlog
+systemctl start ntp 
+ntpdate -u a-e.no && hwclock -w 
+timedatectl set-timezone Europe/Oslo
+echo "NTP and timezone updated, local time: $(date)" >>/var/log/jdlog
 
 # Join domain
 echo $domainPassword | realm join $domainToJoin -U $domainUsername --computer-ou="$ouPath"
-echo "Domain joined" >>/var/log/aezlog
-realm list >>/var/log/aezlog
+echo "Domain joined" >>/var/log/jdlog
+realm list >>/var/log/jdlog
 
 # Configure pam.d
 echo "session required pam_mkhomedir.so skel=/etc/skel/ umask=0022" >>/etc/pam.d/common-session
-echo "/etc/pam.d/common-session updated" >>/var/log/aezlog
+echo "/etc/pam.d/common-session updated" >>/var/log/jdlog
 
 # Configure sssd
 sed -i 's/use_fully_qualified_names = True/use_fully_qualified_names = False/g' /etc/sssd/sssd.conf
@@ -54,19 +52,19 @@ echo "dyndns_update = true" >>/etc/sssd/sssd.conf
 echo "dyndns_refresh_intervcal = 43200" >>/etc/sssd/sssd.conf
 echo "dyndns_update_ptr = true" >>/etc/sssd/sssd.conf
 echo "dyndns_ttl = 3600" >>/etc/sssd/sssd.conf
-echo "sssd updated" >>/var/log/aezlog
+echo "sssd updated" >>/var/log/jdlog
 
 # Configure permits
 realm deny --all        # No domain logins allowed per default
 for group in $allowedLoginGroups; do
-    echo "  Permitting login for group $group.$domainToJoin" >>/var/log/aezlog
+    echo "  Permitting login for group $group.$domainToJoin" >>/var/log/jdlog
     realm permit --groups $group $domainToJoin
-    echo "  Adding group $group to /etc/sudoers" >>/var/log/aezlog
+    echo "  Adding group $group to /etc/sudoers" >>/var/log/jdlog
     echo "%$group ALL=(ALL:ALL) ALL" >>/etc/sudoers
 done
 
-systemctl restart sssd >>/var/log/aezlog
-echo "Realm permit executed" >>/var/log/aezlog
+systemctl restart sssd >>/var/log/jdlog
+echo "Realm permit executed" >>/var/log/jdlog
 
 # Configure Samba
 # sed -i "s/   workgroup = WORKGROUP/   workgroup = $netbiosName/g" /etc/samba/smb.conf
@@ -90,6 +88,6 @@ echo "load printers = no" >> /etc/samba/smb.conf
 echo "cups options = raw" >> /etc/samba/smb.conf
 echo "printcap name = /dev/null" >> /etc/samba/smb.conf
 echo "" >> /etc/samba/smb.conf
-echo "Samba configured" >>/var/log/aezlog
+echo "Samba configured" >>/var/log/jdlog
 
 exit 0
