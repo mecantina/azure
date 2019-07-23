@@ -23,9 +23,13 @@ echo " Netbios Name: $netbiosName" >>/var/log/jdlog
 echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
-export DEBIAN_FRONTEND=noninteractive
-apt -yq install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients
-apt -yq install libsss-sudo
+echo "krb5-config     krb5-config/default_realm       string  $realmName" >/tmp/debconf
+echo "krb5-config     krb5-config/add_servers_realm   string  $realmName" >>/tmp/debconf
+echo "Configuring debconf:" >>/var/log/jdlog
+cat /tmp/debconf >>/var/log/jdlog
+debconf-set-selections /tmp/debconf >>/var/log/jdlog 2>&1
+apt -yq install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients >>/var/log/jdlog 2>&1
+apt -yq install libsss-sudo >>/var/log/jdlog 2>&1
 # Configure NTP
 systemctl stop ntp  
 echo "pool $domainToJoin " >/etc/ntp.conf
@@ -164,13 +168,13 @@ cat /etc/pam.d/common-session >>/var/log/jdlog
 
 # Restart services
 echo "Restarting services..." >>/var/log/jdlog
-systemctl restart chrony.service
-systemctl restart smbd.service nmbd.service
-systemctl start sssd.service
+systemctl restart chrony.service >>/var/log/jdlog 2>&1
+systemctl restart smbd.service nmbd.service >>/var/log/jdlog 2>&1
+systemctl start sssd.service >>/var/log/jdlog 2>&1
 
 echo "kinit..." >>/var/log/jdlog
-echo $domainPassword | kinit $domainUsername
-klist >>/var/log/jdlog
+echo $domainPassword | kinit $domainUsername >>/var/log/jdlog 2>&1
+klist >>/var/log/jdlog 2>&1
 echo "Joining domain..." >>/var/log/jdlog
-net ads join -k createcomputer="$ouPath" >>/var/log/jdlog
+net ads join -k createcomputer="$ouPath" >>/var/log/jdlog 2>&1
 echo "Done" >>/var/log/jdlog
