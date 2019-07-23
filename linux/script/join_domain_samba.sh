@@ -125,7 +125,7 @@ echo "# Uncomment if the AD domain is named differently than the Samba domain" >
 echo "# ad_domain = $realmName" >>/etc/sssd/sssd.conf
 echo " " >>/etc/sssd/sssd.conf
 echo "# Enumeration is discouraged for performance reasons." >>/etc/sssd/sssd.conf
-echo "enumerate = true" >>/etc/sssd/sssd.conf
+echo "enumerate = false" >>/etc/sssd/sssd.conf
 echo "SSSD configured:" >>/var/log/jdlog
 chown root:root /etc/sssd/sssd.conf
 sudo chmod 600 /etc/sssd/sssd.conf
