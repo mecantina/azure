@@ -28,7 +28,7 @@ echo "krb5-config     krb5-config/add_servers_realm   string  $realmName" >>/tmp
 echo "Configuring debconf:" >>/var/log/jdlog
 cat /tmp/debconf >>/var/log/jdlog
 debconf-set-selections /tmp/debconf >>/var/log/jdlog 2>&1
-apt -yq install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients >>/var/log/jdlog 2>&1
+apt -yq install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients debconf-utils >>/var/log/jdlog 2>&1
 apt -yq install libsss-sudo >>/var/log/jdlog 2>&1
 # Configure NTP
 systemctl stop ntp  
