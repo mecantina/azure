@@ -23,11 +23,12 @@ echo " Netbios Name: $netbiosName" >>/var/log/jdlog
 echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
-echo "krb5-config     krb5-config/default_realm       string  $realmName" >/tmp/debconf
-echo "krb5-config     krb5-config/add_servers_realm   string  $realmName" >>/tmp/debconf
-echo "Configuring debconf:" >>/var/log/jdlog
-cat /tmp/debconf >>/var/log/jdlog
-debconf-set-selections /tmp/debconf >>/var/log/jdlog 2>&1
+# echo "krb5-config     krb5-config/default_realm       string  $realmName" >/tmp/debconf
+# echo "krb5-config     krb5-config/add_servers_realm   string  $realmName" >>/tmp/debconf
+# echo "Configuring debconf:" >>/var/log/jdlog
+# cat /tmp/debconf >>/var/log/jdlog
+# debconf-set-selections /tmp/debconf >>/var/log/jdlog 2>&1
+export DEBIAN_FRONTEND=noninteractive
 apt -yq install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients debconf-utils >>/var/log/jdlog 2>&1
 apt -yq install libsss-sudo >>/var/log/jdlog 2>&1
 # Configure NTP
