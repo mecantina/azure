@@ -24,7 +24,7 @@ echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
 apt -y install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients
-
+apt -y install libsss-sudo
 # Configure NTP
 systemctl stop ntp  
 echo "pool $domainToJoin " >/etc/ntp.conf
