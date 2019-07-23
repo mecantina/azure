@@ -30,15 +30,15 @@ echo " Realmname: $realmName" >>/var/log/jdlog
 # debconf-set-selections /tmp/debconf >>/var/log/jdlog 2>&1
 export DEBIAN_FRONTEND=noninteractive
 apt -yq install krb5-user >>/var/log/jdlog 2>&1
-apt -yq samba >>/var/log/jdlog 2>&1
-apt -yq sssd >>/var/log/jdlog 2>&1
-apt -yq chrony >>/var/log/jdlog 2>&1
-apt -yq ntpdate >>/var/log/jdlog 2>&1
-apt -yq ntp >>/var/log/jdlog 2>&1
-apt -yq libsss-sudo >>/var/log/jdlog 2>&1
-apt -yq heimdal-clients >>/var/log/jdlog 2>&1
-apt -yq debconf-utils >>/var/log/jdlog 2>&1
+apt -yq install samba >>/var/log/jdlog 2>&1
+apt -yq install sssd >>/var/log/jdlog 2>&1
+apt -yq install chrony >>/var/log/jdlog 2>&1
+apt -yq install ntp >>/var/log/jdlog 2>&1
+apt -yq install ntpdate >>/var/log/jdlog 2>&1
 apt -yq install libsss-sudo >>/var/log/jdlog 2>&1
+apt -yq install heimdal-clients >>/var/log/jdlog 2>&1
+apt -yq install debconf-utils >>/var/log/jdlog 2>&1
+apt -yq install install libsss-sudo >>/var/log/jdlog 2>&1
 # Configure NTP
 systemctl stop ntp  
 echo "pool $domainToJoin " >/etc/ntp.conf
