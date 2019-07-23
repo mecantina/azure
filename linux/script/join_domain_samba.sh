@@ -23,7 +23,7 @@ echo " Netbios Name: $netbiosName" >>/var/log/jdlog
 echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
-apt -y install krb5-user samba sssd chrony ntpdate ntp libsss-sudo 
+apt -y install krb5-user samba sssd chrony ntpdate ntp libsss-sudo heimdal-clients
 
 # Configure NTP
 systemctl stop ntp  
