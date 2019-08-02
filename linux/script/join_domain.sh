@@ -23,21 +23,21 @@ echo " Netbios Name: $netbiosName" >>/var/log/jdlog
 echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
-apt -y install realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit samba winbind ntp ntpdate
+apt -y install realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit samba winbind ntp ntpdate  &>>/var/log/jdlog
 echo "Software install done" >>/var/log/jdlog
 
 # Configure NTP
 systemctl stop ntp  
 echo "pool $domainToJoin " >/etc/ntp.conf
-systemctl start ntp 
-ntpdate -u a-e.no && hwclock -w 
-timedatectl set-timezone Europe/Oslo
+systemctl start ntp &>>/var/log/jdlog
+ntpdate -u a-e.no && hwclock -w &>>/var/log/jdlog
+timedatectl set-timezone Europe/Oslo &>>/var/log/jdlog
 echo "NTP and timezone updated, local time: $(date)" >>/var/log/jdlog
 
 # Join domain
 echo $domainPassword | realm join $domainToJoin -U $domainUsername --computer-ou="$ouPath"
 echo "Domain joined" >>/var/log/jdlog
-realm list >>/var/log/jdlog
+realm list &>>/var/log/jdlog
 
 # Configure pam.d
 echo "session required pam_mkhomedir.so skel=/etc/skel/ umask=0022" >>/etc/pam.d/common-session
@@ -55,7 +55,7 @@ echo "dyndns_ttl = 3600" >>/etc/sssd/sssd.conf
 echo "sssd updated" >>/var/log/jdlog
 
 # Configure permits
-realm deny --all        # No domain logins allowed per default
+realm deny --all  &>>/var/log/jdlog      # No domain logins allowed per default
 for group in $allowedLoginGroups; do
     echo "  Permitting login for group $group.$domainToJoin" >>/var/log/jdlog
     realm permit --groups $group $domainToJoin
@@ -63,8 +63,8 @@ for group in $allowedLoginGroups; do
     echo "%$group ALL=(ALL:ALL) ALL" >>/etc/sudoers
 done
 
-systemctl restart sssd >>/var/log/jdlog
-echo "Realm permit executed" >>/var/log/jdlog
+systemctl restart sssd &>>/var/log/jdlog
+echo "Realm permit executed" &>>/var/log/jdlog
 
 # Configure Samba
 # sed -i "s/   workgroup = WORKGROUP/   workgroup = $netbiosName/g" /etc/samba/smb.conf
