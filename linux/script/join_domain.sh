@@ -23,6 +23,8 @@ echo " Netbios Name: $netbiosName" >>/var/log/jdlog
 echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
+apt -y update &>>/var/log/jdlog
+apt -y upgrade
 apt -y install realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit samba winbind ntp ntpdate  &>>/var/log/jdlog
 echo "Software install done" >>/var/log/jdlog
 
