@@ -60,7 +60,7 @@ echo "sssd updated" >>/var/log/jdlog
 realm deny --all  &>>/var/log/jdlog      # No domain logins allowed per default
 for group in $allowedLoginGroups; do
     echo "  Permitting login for group $group.$domainToJoin" >>/var/log/jdlog
-    realm permit --groups $group $domainToJoin
+    realm permit --groups $group $domainToJoin &>>/var/log/jdlog
     echo "  Adding group $group to /etc/sudoers" >>/var/log/jdlog
     echo "%$group ALL=(ALL:ALL) ALL" >>/etc/sudoers
 done
