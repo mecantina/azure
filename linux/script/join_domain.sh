@@ -24,7 +24,7 @@ echo " Realmname: $realmName" >>/var/log/jdlog
 
 # Install packages
 apt -y update &>>/var/log/jdlog
-apt -y upgrade
+apt -y upgrade &>>/var/log/jdlog
 apt -y install realmd sssd sssd-tools libnss-sss libpam-sss adcli samba-common-bin oddjob oddjob-mkhomedir packagekit samba winbind ntp ntpdate  &>>/var/log/jdlog
 echo "Software install done" >>/var/log/jdlog
 
@@ -37,7 +37,7 @@ timedatectl set-timezone Europe/Oslo &>>/var/log/jdlog
 echo "NTP and timezone updated, local time: $(date)" >>/var/log/jdlog
 
 # Join domain
-echo $domainPassword | realm join $domainToJoin -U $domainUsername --computer-ou="$ouPath"
+echo $domainPassword | realm join $domainToJoin -U $domainUsername --computer-ou="$ouPath" &>>/var/log/jdlog
 echo "Domain joined" >>/var/log/jdlog
 realm list &>>/var/log/jdlog
 
