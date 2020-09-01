@@ -20,7 +20,7 @@ echo "  diskList:          $diskList" >>/var/log/lvmlog
 
 # Create disk partitions
 echo "Partitioning disks..." >>/var/log/lvmlog
-for disk in "$diskList" 
+for disk in $diskList 
 do
     echo "  Partitioning $disk..." >>/var/log/lvmlog
     parted /dev/$disk mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
