@@ -25,13 +25,14 @@ do
     echo "  Partitioning $disk..." >>/var/log/lvmlog
     parted /dev/${disk} mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
     partitionList="${partitionList} /dev/${disk}1"
+    pvcreate "/dev/${disk}1" >>/var/log/lvmlog
 done
 
 echo "Partition list: ${partitionList}" >>/var/log/lvmlog
 
 # Create Physical Volumes
-echo "Creating Physical Volumes..." >>/var/log/lvmlog
-pvcreate "${partitionList}" >>/var/log/lvmlog
+#echo "Creating Physical Volumes..." >>/var/log/lvmlog
+#pvcreate "${partitionList}" >>/var/log/lvmlog
 
 # Create Volume Group
 echo "Creating Volume Group..." >>/var/log/lvmlog
