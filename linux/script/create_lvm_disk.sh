@@ -42,20 +42,20 @@ echo "Partition list: ${partitionList}" >>/var/log/lvmlog
 
 # Create Volume Group
 echo "Creating Volume Group ${volumeGroupName}..." >>/var/log/lvmlog
-vgcreate ${volumeGroupName} ${partitionList} >>/var/log/lvmlog
+vgcreate ${volumeGroupName} ${partitionList} >>/var/log/lvmlog 2>>/var/log/lvmlog
 
 # Create Logical colume
 echo "Creating Logical Volume ${volumeName}..." >>/var/log/lvmlog
-lvcreate -l 100%VG -n ${volumeName} ${volumeGroupName} >>/var/log/lvmlog
+lvcreate -l 100%VG -n ${volumeName} ${volumeGroupName} >>/var/log/lvmlog 2>>/var/log/lvmlog
 
 # Create file system
 echo "Creating File System..." >>/var/log/lvmlog
-mkfs.ext4 /dev/${volumeGroupName}/${volumeName} >>/var/log/lvmlog
+mkfs.ext4 /dev/${volumeGroupName}/${volumeName} >>/var/log/lvmlog 2>>/var/log/lvmlog
 
 echo "Mounting file system..." >>/var/log/lvmlog
 echo "/dev/${volumeGroupName}/${volumeName} ${mountPoint} ext4 defaults 0 0" >>/etc/fstab
-cat /etc/fstab >>/var/log/lvmlog
-mkdir "${mountPoint}" >>/var/log/lvmlog
-mount -a >>/var/log/lvmlog
+cat /etc/fstab >>/var/log/lvmlog 2>>/var/log/lvmlog 2>>/var/log/lvmlog
+mkdir "${mountPoint}" >>/var/log/lvmlog 2>>/var/log/lvmlog
+mount -a >>/var/log/lvmlog 2>>/var/log/lvmlog
 
 exit 0
