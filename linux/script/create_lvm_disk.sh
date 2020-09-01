@@ -14,9 +14,9 @@ echo "  MountPoint:        $mountPoint" >>/var/log/lvmlog
 echo "  diskList:          $diskList" >>/var/log/lvmlog
 
 # Install packages
-apt -y update &>>/var/log/lvmlog
-apt -y upgrade &>>/var/log/lvmlog
-echo "Software install done" >>/var/log/lvmlog
+#apt -y update &>>/var/log/lvmlog
+#apt -y upgrade &>>/var/log/lvmlog
+#echo "Software install done" >>/var/log/lvmlog
 
 # Create disk partitions
 echo "Partitioning disks..." >>/var/log/lvmlog
