@@ -19,13 +19,15 @@ apt -y upgrade &>>/var/log/lvmlog
 echo "Software install done" >>/var/log/lvmlog
 
 # Create disk partitions
+echo "Partitioning disks..." >>/var/log/lvmlog
 for disk in "$diskList" 
 do
-    parted "/dev/$disk" mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
+    echo "  Partitioning $disk..." >>/var/log/lvmlog
+    parted /dev/$disk mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
     partitionList="$partitionList /dev/$disk1"
 done
 
-echo "Partition list: $partitionList"
+echo "Partition list: $partitionList" >>/var/log/lvmlog
 
 # Create Physical Volumes
 echo "Creating Physical Volumes..." >>/var/log/lvmlog
