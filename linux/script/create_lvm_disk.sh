@@ -46,6 +46,7 @@ mkfs.ext4 /dev/$volumeGroupName/$volumeName >>/var/log/lvmlog
 echo "Mounting file system..." >>/var/log/lvmlog
 echo "/dev/$volumeGroupName/$volumeName $mountPoint ext4 defaults 0 0" >>/etc/fstab
 cat /etc/fstab >>/var/log/lvmlog
+mkdir "$mountPoint" >>/var/log/lvmlog
 mount -a >>/var/log/lvmlog
 
 exit 0
