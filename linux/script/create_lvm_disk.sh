@@ -14,7 +14,7 @@ echo "  Volume name:       ${volumeName}" >>/var/log/lvmlog
 echo "  Volume Group name: ${volumeGroupName}" >>/var/log/lvmlog
 echo "  MountPoint:        ${mountPoint}" >>/var/log/lvmlog
 #echo "  diskList:          ${diskList}" >>/var/log/lvmlog
-echo "  Number of Data Disks: ${numberOfDataDisks}"
+echo "  Number of Data Disks: ${numberOfDataDisks}" >>/var/log/lvmlog
 
 # Install packages
 #apt -y update &>>/var/log/lvmlog
@@ -22,9 +22,10 @@ echo "  Number of Data Disks: ${numberOfDataDisks}"
 #echo "Software install done" >>/var/log/lvmlog
 
 # Create disk partitions
-echo "Partitioning disks..." >>/var/log/lvmlog
-for (( lun=0; lun<${numberOfDataDisks}; lun++))
+echo "Partitioning ${numberOfDataDisks} disks..." >>/var/log/lvmlog
+for (( lun=0; lun<${numberOfDataDisks}; lun++ ))
 do
+    echo "  Doing lun${lun}..." >>/var/log/lvmlog
     disk="/dev/disk/azure/scsi1/lun${lun}"
     partition="${disk}-part1"
     echo "  Partitioning ${disk} with ${partition}..." >>/var/log/lvmlog
