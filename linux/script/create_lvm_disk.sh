@@ -2,8 +2,10 @@
 #
 # Create a LVM disk composed of several data disks
 volumeName="$1"
-mountPoint="$2" # Absolute mount point of the LVM disk
-diskList="$3"   # Space-separated list of devices for the LVM
+mountPoint="$2"         # Absolute mount point of the LVM disk
+#diskList="$3"          # Space-separated list of devices for the LVM
+numberOfDataDisks="$3"  # Number of data disks
+
 volumeGroupName="vg_$volumeName"
 
 # Log request parameters
@@ -11,7 +13,8 @@ echo "Create LVM Disk started..." >>/var/log/lvmlog
 echo "  Volume name:       ${volumeName}" >>/var/log/lvmlog
 echo "  Volume Group name: ${volumeGroupName}" >>/var/log/lvmlog
 echo "  MountPoint:        ${mountPoint}" >>/var/log/lvmlog
-echo "  diskList:          ${diskList}" >>/var/log/lvmlog
+#echo "  diskList:          ${diskList}" >>/var/log/lvmlog
+echo "  Number of Data Disks: ${numberOfDataDisks}"
 
 # Install packages
 #apt -y update &>>/var/log/lvmlog
@@ -20,12 +23,14 @@ echo "  diskList:          ${diskList}" >>/var/log/lvmlog
 
 # Create disk partitions
 echo "Partitioning disks..." >>/var/log/lvmlog
-for disk in $diskList 
+for (( lun=0; lun<${numberOfDataDisks}; lun++))
 do
-    echo "  Partitioning $disk..." >>/var/log/lvmlog
-    parted /dev/${disk} mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
-    partitionList="${partitionList} /dev/${disk}1"
-    pvcreate "/dev/${disk}1" >>/var/log/lvmlog
+    disk="/dev/disk/azure/scsi1/lun${lun}"
+    partition="${disk}-part1"
+    echo "  Partitioning ${disk} with ${partition}..." >>/var/log/lvmlog
+    parted ${disk} mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
+    partitionList="${partitionList} ${partition}"
+    pvcreate "${partition}" >>/var/log/lvmlog
 done
 
 echo "Partition list: ${partitionList}" >>/var/log/lvmlog
