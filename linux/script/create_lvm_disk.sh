@@ -41,12 +41,12 @@ echo "Partition list: ${partitionList}" >>/var/log/lvmlog
 #pvcreate "${partitionList}" >>/var/log/lvmlog
 
 # Create Volume Group
-echo "Creating Volume Group..." >>/var/log/lvmlog
-vgcreate ${volumeGroupName} "${partitionList}" >>/var/log/lvmlog
+echo "Creating Volume Group ${volumeGroupName}..." >>/var/log/lvmlog
+vgcreate ${volumeGroupName} ${partitionList} >>/var/log/lvmlog
 
 # Create Logical colume
-echo "Creating Logical Volume..." >>/var/log/lvmlog
-lvcreate -l 100%VG -n "$volumeName" "${volumeGroupName}" >>/var/log/lvmlog
+echo "Creating Logical Volume ${volumeName}..." >>/var/log/lvmlog
+lvcreate -l 100%VG -n ${volumeName} ${volumeGroupName} >>/var/log/lvmlog
 
 # Create file system
 echo "Creating File System..." >>/var/log/lvmlog
