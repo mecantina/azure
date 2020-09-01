@@ -24,7 +24,7 @@ for disk in $diskList
 do
     echo "  Partitioning $disk..." >>/var/log/lvmlog
     parted /dev/$disk mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
-    partitionList="${partitionList} /dev/${disk}1'
+    partitionList="${partitionList} /dev/${disk}1"
 done
 
 echo "Partition list: $partitionList" >>/var/log/lvmlog
