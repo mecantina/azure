@@ -29,12 +29,15 @@ do
     disk="/dev/disk/azure/scsi1/lun${lun}"
     partition="${disk}-part1"
     echo "  Partitioning ${disk} with ${partition}..." >>/var/log/lvmlog
-    parted ${disk} mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog
+    parted ${disk} mklabel gpt mkpart primary 2048s 100% >>/var/log/lvmlog 2>>/var/log/lvmlog
+    sleep 2s 
     partitionList="${partitionList} ${partition}"
-    pvcreate "${partition}" >>/var/log/lvmlog
+    pvcreate "${partition}" >>/var/log/lvmlog 2>>/var/log/lvmlog
+    sleep 2s
 done
 
 echo "Partition list: ${partitionList}" >>/var/log/lvmlog
+sleep 10s
 
 # Create Physical Volumes
 #echo "Creating Physical Volumes..." >>/var/log/lvmlog
