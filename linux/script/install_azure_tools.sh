@@ -24,7 +24,7 @@ echo "Install of mssql tools started" >>$LOGFILE
 curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
 apt -y update >>$LOGFILE
-apt -y install mssql-tools unixodbc-dev >>$LOGFILE
+ACCEPT_EULA=Y apt -y install mssql-tools unixodbc-dev >>$LOGFILE
 #
 # azcopy
 #
