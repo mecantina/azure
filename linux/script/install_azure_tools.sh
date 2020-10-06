@@ -26,6 +26,12 @@ curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /et
 sudo apt-get update >>$LOGFILE
 sudo apt-get install mssql-tools unixodbc-dev >>$LOGFILE
 #
+# azcopy
+#
+echo "Install of azcopy started" >>$LOGFILE
+wget -O /usr/local/bin/azcopy https://raw.githubusercontent.com/mecantina/azure/master/linux/binary/azcopy 
+chmod +x /usr/local/bin/azcopy
+#
 # Done
 #
 echo "Software install done" >>$LOGFILE
