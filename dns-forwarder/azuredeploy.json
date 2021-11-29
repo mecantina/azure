@@ -73,10 +73,22 @@
         "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
       }
     },
-    "subnetResourceId": {
+    "subnetResourceGroup": {
       "type": "string",
       "metadata": {
-        "description": "Resource Id of the Subnet used for the DNS forwarder"
+        "description": "Resource group of the Subnet used for the DNS forwarder"
+      }
+    },
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "VNet used for the DNS forwarder"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet used for the DNS forwarder"
       }
     }
   },
@@ -184,7 +196,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "parameters('subnetResourceId'))]"
+                "id": "[resourceId(parameters('subnetResourceGroup'), 'Microsoft.Network/virtualNetworks/Subnets', parameters('vnetName'), parameters('subnetName'))]"
               }
             }
           }
