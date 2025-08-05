@@ -95,6 +95,17 @@ if [ ! -f /srv/www/wordpress/wp-config.php ]; then
 
 fi
 
+# Configure Max Upload Size
+if ! grep -q "upload_max_filesize = 64M" /etc/php/8.3/apache2/php.ini; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S')   Configuring PHP upload size..." >> $LOG
+    sudo sed -i 's/upload_max_filesize = .*/upload_max_filesize = 64M/' /etc/php/8.3/apache2/php.ini
+    sudo sed -i 's/post_max_size = .*/post_max_size = 64M/' /etc/php/8.3/apache2/php.ini
+    sudo sed -i 's/max_execution_time = .*/max_execution_time = 300/' /etc/php/8.3/apache2/php.ini
+    sudo sed -i 's/max_input_time = .*/max_input_time = 300/' /etc/php/8.3/apache2/php.ini
+    echo "$(date '+%Y-%m-%d %H:%M:%S')   Restarting Apache..." >> $LOG
+    sudo systemctl restart apache2
+fi
+
 # Install WordPress CLI if not already installed
 if [ ! -f /usr/local/bin/wp ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S')   Installing WP-CLI..." >> $LOG
